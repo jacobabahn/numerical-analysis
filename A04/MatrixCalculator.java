@@ -1,21 +1,12 @@
 public class MatrixCalculator implements Matrix {
-    /**
-     * Calculates A + B, where A and B are matrices. 
-     * Returns null if the two matrices are not 
-     * addition compatible.
-     * This method does not modify the contents of
-     * the matrices passed to it.
-     * @param A the left matrix
-     * @param B the right matrix
-     * @return A + B, if possible; otherwise, null
-     */
+    @Override
     public double[][] add(double[][] A, double[][] B) {
         // Check if the two matrices are addition compatible
         if (A.length != B.length || A[0].length != B[0].length) {
             return null;
         }
 
-        addedMatrix = new double[A.length][A[0].length];
+        var addedMatrix = new double[A.length][A[0].length];
 
         for (int i = 0; i < A.length; i++) {
             for (int j = 0; j < A[i].length; j++) {
@@ -26,23 +17,15 @@ public class MatrixCalculator implements Matrix {
         return addedMatrix;
     }
 
-    /** 
-     * Calculates A - B, where A and B are matrices. 
-     * Returns null if the two matrices are not 
-     * subtraction compatible.
-     * This method does not modify the contents of
-     * the matrices passed to it.
-     * @param A the left matrix
-     * @param B the right matrix
-     * @return A - B, if possible; otherwise, null
-     */
+
+    @Override
     public double[][] subtract(double[][] A, double[][] B) {
         // check if the two matrices are subtraction compatible
         if (A.length != B.length || A[0].length != B[0].length) {
             return null;
         }
 
-        subtractedMatrix = new double[A.length][A[0].length];
+        var subtractedMatrix = new double[A.length][A[0].length];
 
         for (int i = 0; i < A.length; i++) {
             for (int j = 0; j < A[i].length; j++) {
@@ -54,23 +37,15 @@ public class MatrixCalculator implements Matrix {
 
     }
 
-    /**
-     * Calculates AB, where a and b are matrices. 
-     * Returns null if the two matrices are not 
-     * multiplication compatible.
-     * This method does not modify the contents of
-     * the matrices passed to it.
-     * @param A the left matrix
-     * @param B the right matrix
-     * @return AB, if possible; otherwise, null
-     */
+
+    @Override
     public double[][] multiply(double[][] A, double[][] B) {
         // check if the two matrices are multiplication compatible
         if (A[0].length != B.length) {
             return null;
         }
 
-        multipliedMatrix = new double[A.length][B[0].length];
+        var multipliedMatrix = new double[A.length][B[0].length];
 
         for (int i = 0; i < A.length; i++) {
             for (int j = 0; j < B[0].length; j++) {
@@ -83,16 +58,10 @@ public class MatrixCalculator implements Matrix {
         return multipliedMatrix;
     }
 
-    /**
-     * Calculates the scalar product cA.
-     * This method does not modify the contents of
-     * matrix A.
-     * @param c the scalar
-     * @param A the matrix
-     * @return cA
-     */
+
+    @Override
     public double[][] multiply(double c, double[][] A) {
-        multipliedMatrix = new double[A.length][A[0].length];
+        var multipliedMatrix = new double[A.length][A[0].length];
 
         for (int i = 0; i < A.length; i++) {
             for (int j = 0; j < A[i].length; j++) {
@@ -103,61 +72,130 @@ public class MatrixCalculator implements Matrix {
         return multipliedMatrix;
     }
     
-    /**
-     * Calculates the scalar product Ac.
-     * This method does not modify the contents of
-     * matrix A.
-     * @param A the matrix
-     * @param c the scalar
-     * @return Ac
-     */
+
+    @Override
     public double[][] multiply(double[][] A, double c) {
         return multiply(c, A);
     }
 
-    /**
-     * Performs Gaussian Elimination with Scaled Partial Pivoting
-     * Gauss does the elimination on A and updates l and A.
-     * It does not affect the b vector.
-     * @param A matrix of coefficients
-     * @param l array of indices
-     */
-    public void gauss(double[][] A, int[] l) {}
 
-    /**
-     * Completes the forward elimination by  
-     * applying it to the b column.
-     * @param A matrix of coefficients
-     * @param l array of indices
-     * @param b array of right hand side values
-     */
-    public void gaussModifiedForwardEliminationRHS(double[][] a, int[] l, double[] b) {}
+    @Override
+    public void gauss(double[][] A, int[] l) {
+        int n = A.length;
+        double[] s = new double[n];
 
-    /**
-     * Applies the forward elimination to the b column vector and returns 
-     * this as the solution. This is the last part of the Solve procedure 
-     * pseudocode in the book.
-     * @param A matrix of coefficients
-     * @param l array of indices
-     * @param b array of right hand side values
-     * @return the system solution
-     */
-    public double[] solve(double[][] A, int[] l, double[] b) {}
+        for (int i = 0; i < n; i++) {
+            l[i] = i;
+            double smax = 0;
 
-    /**
-     * Calculates the inverse of matrix A using using the methods
-     * you developed for Gaussian elimination.
-     * 
-     * 1. Do the Gaussian elimination on matrix A.
-     * 2. Create an identity matrix with the same dimensions as A
-     * 3. Do the elimination on the right hand side using each column 
-     *    of the identity matrix as the b column in elimination.
-     * 4. Solve for that column and replace the column with the solution 
-     *    vector contents.
-     * 
-     * @param A matrix of double-precision floating-point numbers.
-     * @return inverse of matrix A.
-     */
-    public double[][] inverse(double[][] A) {}
-    
+            for (int j = 0; j < A[0].length; j++) {
+                smax = Math.max(smax, Math.abs(A[i][j]));
+            }
+            s[i] = smax;
+        }
+
+        for (int k = 0; k < n - 1; k++) {
+            double rmax = 0;
+
+            for (int i = k; i < n; i++) {
+                double r = Math.abs(A[l[i]][k] / s[l[i]]);
+
+                if (r > rmax) {
+                    rmax = r;
+                    int temp = l[i];
+                    l[i] = l[k];
+                    l[k] = temp;
+                }
+            }
+
+
+            for (int i = k + 1; i < n; i++) {
+                double xmult = A[l[i]][k] / A[l[k]][k];
+                A[l[i]][k] = xmult;
+
+                for (int j = k + 1; j < A[0].length; j++) {
+                    A[l[i]][j] = A[l[i]][j] - xmult * A[l[k]][j];
+                }
+            }
+        }
+    }
+
+
+    @Override
+    public void gaussModifiedForwardEliminationRHS(double[][] a, int[] l, double[] b) {
+        int n = a.length;
+        for (int k = 0; k < n - 1; k++) {
+            for (int i = k + 1; i < n; i++) {
+                b[l[i]] = b[l[i]] - a[l[i]][k] * b[l[k]];
+            }
+        }
+    }
+
+
+    @Override
+    public double[] solve(double[][] A, int[] l, double[] b) {
+        int n = A.length;
+        double[] x = new double[n];
+
+        gaussModifiedForwardEliminationRHS(A, l, x);
+
+        x[n - 1] = b[l[n - 1]] / A[l[n - 1]][n - 1];
+
+        for (int i = x.length - 2; i >= 0; i--) {
+            double sum = b[l[i]];
+            for (int j = i + 1; j < n; j++) {
+                sum = sum - A[l[i]][j] * x[j];
+            }
+            x[i] = sum / A[l[i]][i];
+        }
+
+        return x;
+    }
+
+ 
+    @Override
+    public double[][] inverse(double[][] A) {
+
+        //1. Do the Gaussian elimination on matrix A.
+        int[] l = new int[A.length];
+        gauss(A, l);
+
+        //2. Create an identity matrix with the same dimensions as A
+        double[][] identity = new double[A.length][A[0].length];
+        for (int i = 0; i < identity.length; i++) {
+            for (int j = 0; j < identity[i].length; j++) {
+                if (i == j) {
+                    identity[i][j] = 1;
+                } else {
+                    identity[i][j] = 0;
+                }
+            }
+        }
+
+        //3. Do the elimination on the right hand side using each column
+        //   of the identity matrix as the b column in elimination.
+        for (int i = 0; i < identity.length; i++) {
+            gaussModifiedForwardEliminationRHS(A, l, identity[i]);
+        }
+
+        //4. Solve for that column and replace the column with the solution
+        //   vector contents.
+        for (int i = 0; i < identity.length; i++) {
+            identity[i] = solve(A, l, identity[i]);
+        }
+        
+        transpose(identity);
+        return identity;
+    }
+
+    // tranpsose the matrix
+    public void transpose(double[][] A) {
+        for (int i = 0; i < A.length; i++) {
+            for (int j = i + 1; j < A[i].length; j++) {
+                double temp = A[i][j];
+                A[i][j] = A[j][i];
+                A[j][i] = temp;
+            }
+        }
+    }
 }
