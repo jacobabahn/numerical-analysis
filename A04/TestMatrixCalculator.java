@@ -108,6 +108,48 @@ class TestMatrixCalculator {
         assertArrayEquals(xExpected, x, 0.0001);
     }
 
+
+    @Test
+    void testGaussEliminationXMatrix2() {
+        double[][] A = {
+            { 0.02, 0.01, 0, 0},
+            { 1, 2, 1, 0},
+            { 0, 1, 2, 1},
+            {0, 0, 100, 200}
+        };
+
+        double[] b = { 0.02, 1, 4, 800};
+        int[] l = { 0, 1, 2, 3 };
+
+        double xExpected[] = { 1, 0, 0, 4};
+        matrixObject.gauss(A, l);
+        matrixObject.gaussModifiedForwardEliminationRHS(A, l, b);
+
+        double[] x = matrixObject.solve(A, l, b);
+        assertArrayEquals(xExpected, x, 0.0001);
+    }
+
+    
+    @Test
+    void testGaussEliminationBColumn2() {
+        double[][] A = {
+            { 0.02, 0.01, 0, 0},
+            { 1, 2, 1, 0},
+            { 0, 1, 2, 1},
+            {0, 0, 100, 200}
+        };
+
+        double[] b = { 0.02, 1, 4, 800};
+        int[] l = { 0, 1, 2, 3 };
+
+        double bExpected[] = {0.02, 0, 4, 500};
+        matrixObject.gauss(A, l);
+        matrixObject.gaussModifiedForwardEliminationRHS(A, l, b);
+
+        assertArrayEquals(bExpected, b, 0.0001);
+    }
+
+
     @Test
     void testInverse() {
         double[][] A = {
