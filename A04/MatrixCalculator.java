@@ -1,3 +1,10 @@
+//  Name: Jacob Bahn
+//  Assignment number: 4
+//  Assignment: Matrix Arithmetic and Gaussian Elimination
+//  File name: MatrixCalculator.java
+//  Date last modified: February 15, 2023
+//  Honor statement: I have neither given nor received any unauthorized help on this assignment. 
+
 public class MatrixCalculator implements Matrix {
     @Override
     public double[][] add(double[][] A, double[][] B) {
