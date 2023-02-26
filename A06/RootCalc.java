@@ -1,5 +1,3 @@
-import com.sun.org.apache.xpath.internal.functions.Function;
-
 public class RootCalc implements RootCalculator {
     public double bisectionMethod(double a, double b, Function f, double epsilon, int nMax) {
         double fa = f.eval(a);
