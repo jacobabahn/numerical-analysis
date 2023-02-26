@@ -1,14 +1,13 @@
 import com.sun.org.apache.xpath.internal.functions.Function;
 
 public class RootCalc implements RootCalculator {
-    @Override
     public double bisectionMethod(double a, double b, Function f, double epsilon, int nMax) {
         double fa = f.eval(a);
         double fb = f.eval(b);
 
         if (fa * fb > 0) {
             System.out.println("function has same signs at a and b");
-            return 0;
+            return NO_ROOT;
         }
 
         double error = b - a;
@@ -33,10 +32,9 @@ public class RootCalc implements RootCalculator {
         }
 
         System.out.println("max iterations reached");
-        return 0;
+        return NO_ROOT;
     }
 
-    @Override
     public double newtonsMethod(double x, Function f, Function fPrime, double epsilon, int nMax) {
         double fx = f.eval(x);
 
@@ -47,7 +45,7 @@ public class RootCalc implements RootCalculator {
 
             if (Math.abs(fp) < epsilon) {
                 System.out.println("small derivative");
-                return x;
+                return NO_ROOT;
             }
 
             double d = fx / fp;
@@ -63,6 +61,6 @@ public class RootCalc implements RootCalculator {
         }
 
         System.out.println("max iterations reached");
-        return 0;
+        return NO_ROOT;
     }
 }
