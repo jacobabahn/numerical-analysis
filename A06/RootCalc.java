@@ -34,6 +34,7 @@ public class RootCalc implements RootCalculator {
     }
 
     public double newtonsMethod(double x, Function f, Function fPrime, double epsilon, int nMax) {
+        double delta = 0.00001;
         double fx = f.eval(x);
 
         System.out.println("0, x: " + x + " fx: " + fx);
@@ -41,7 +42,7 @@ public class RootCalc implements RootCalculator {
         for (int n = 0; n < nMax; n++) {
             double fp = fPrime.eval(x);
 
-            if (Math.abs(fp) < epsilon) {
+            if (Math.abs(fp) < delta) {
                 System.out.println("small derivative");
                 return NO_ROOT;
             }
