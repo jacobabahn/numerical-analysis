@@ -9,7 +9,7 @@ public class PolynomialCalculator implements InterpolatedPolynomial {
         double[] a = y.clone();
 
         for (int j = 1; j < n; j++) {
-            for (int i = n - 1; i > j; i--) {
+            for (int i = n - 1; i >= j; i--) {
                 a[i] = (a[i] - a[i - 1]) / (x[i] - x[i - j]);
             }
         }
@@ -21,7 +21,7 @@ public class PolynomialCalculator implements InterpolatedPolynomial {
     public double eval(double[] x, double[] a, double t) {
         int n = x.length;
         double temp = a[a.length - 1];
-        for (int i = n - 1; i > 0; i--) {
+        for (int i = n - 2; i >= 0; i--) {
             temp = temp * (t - x[i]) + a[i];
         }
         return temp;
@@ -32,11 +32,28 @@ public class PolynomialCalculator implements InterpolatedPolynomial {
            return "No Solution";
         }
 
-        System.out.println("x = " + Arrays.toString(x));
-        System.out.println("a = " + Arrays.toString(a));
+        String result = "";
+        for (int i = 0; i < a.length; i++) {
+            result += Math.abs(a[i]) + " ";
+        
+            for (int j = 0; j < i; j++) {
+                if (x[j] < 0) {
+                    result += "(x + " + Math.abs(x[j]) + ") ";
+                } else {
+                    result += "(x - " + x[j] + ") ";
+                }
+            }
 
-        return "Polynomial";
-
+            if (i != a.length - 1) {
+                if (a[i + 1] >= 0) {
+                    result += "+ ";
+                } else {
+                    result += "- ";
+                }
+            }
+        }
+        
+        return result;
     }
 
 }
